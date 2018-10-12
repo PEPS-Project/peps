@@ -1,0 +1,26 @@
+# /etc/conf.d/pepsd: config file for /etc/init.d/pepsd
+
+# Config file location
+#BITCOIND_CONFIGFILE="/etc/peps/peps.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
+#BITCOIND_PIDDIR="/var/run/pepsd"
+
+# What filename to give the pidfile
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/pepsd.pid"
+
+# Where to write pepsd data (be mindful that the blockchain is large)
+#BITCOIND_DATADIR="/var/lib/pepsd"
+
+# User and group to own pepsd process
+#BITCOIND_USER="peps"
+#BITCOIND_GROUP="peps"
+
+# Path to pepsd executable
+#BITCOIND_BIN="/usr/bin/pepsd"
+
+# Nice value to run pepsd under
+#BITCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+BITCOIND_OPTS=""

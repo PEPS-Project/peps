@@ -1,0 +1,26 @@
+[Unit]
+Description=Peps's distributed currency daemon
+After=network.target
+
+[Service]
+User=peps
+Group=peps
+
+Type=forking
+PIDFile=/var/lib/pepsd/pepsd.pid
+
+ExecStart=/usr/bin/pepsd -daemon -pid=/var/lib/pepsd/pepsd.pid \
+          -conf=/etc/peps/peps.conf -datadir=/var/lib/pepsd
+
+ExecStop=-/usr/bin/peps-cli -conf=/etc/peps/peps.conf \
+         -datadir=/var/lib/pepsd stop
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target
