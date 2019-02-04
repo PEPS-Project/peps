@@ -60,9 +60,11 @@ using namespace libzerocoin;
  */
 
 CCriticalSection cs_main;
+CCriticalSection cs_mapstake;
 
 BlockMap mapBlockIndex;
 map<uint256, uint256> mapProofOfStake;
+map<COutPoint, int> mapStakeSpent;
 set<pair<COutPoint, unsigned int> > setStakeSeen;
 map<unsigned int, unsigned int> mapHashedBlocks;
 CChain chainActive;
@@ -2133,22 +2135,20 @@ int64_t GetBlockValue(int nHeight)
         nSubsidy = 25 * COIN;
     } else if (nHeight <= 150000 && nHeight > 110000) {
         nSubsidy = 40 * COIN;
-    } else if (nHeight <= 190000 && nHeight > 150000) {
+    } else if (nHeight <= 180000 && nHeight > 150000) {
         nSubsidy = 30 * COIN;
-    } else if (nHeight <= 230000 && nHeight > 190000) {
-        nSubsidy = 28 * COIN;
+    } else if (nHeight <= 230000 && nHeight > 180000) {
+        nSubsidy = 36 * COIN;
     } else if (nHeight <= 270000 && nHeight > 230000) {
-        nSubsidy = 28 * COIN;
+        nSubsidy = 40 * COIN;
     } else if (nHeight <= 310000 && nHeight > 270000) {
-        nSubsidy = 28 * COIN;
+        nSubsidy = 45 * COIN;
     } else if (nHeight <= 350000 && nHeight > 310000) {
-        nSubsidy = 28 * COIN;
+        nSubsidy = 50 * COIN;
     } else if (nHeight <= 500000 && nHeight > 350000) {
-        nSubsidy = 28 * COIN;
-    } else if (nHeight <= 1000000 && nHeight > 500000) {
-        nSubsidy = 25 * COIN;
+        nSubsidy = 45 * COIN;
     } else if (nHeight <= 1500000 && nHeight > 1000000) {
-        nSubsidy = 22 * COIN;
+        nSubsidy = 40 * COIN;
     } else {
         nSubsidy = 1 * COIN;
     }
@@ -2182,24 +2182,22 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
         ret = blockValue * 0.85;
     } else if (nHeight <= 150000 && nHeight > 110000) {
         ret = blockValue * 0.85;
-    } else if (nHeight <= 190000 && nHeight > 150000) {
+    } else if (nHeight <= 180000 && nHeight > 150000) {
         ret = blockValue * 0.77;
-    } else if (nHeight <= 230000 && nHeight > 190000) {
-        ret = blockValue * 0.78;
+    } else if (nHeight <= 230000 && nHeight > 180000) {
+        ret = blockValue * 0.99;
     } else if (nHeight <= 270000 && nHeight > 230000) {
-        ret = blockValue * 0.79;
+        ret = blockValue * 0.95;
     } else if (nHeight <= 310000 && nHeight > 270000) {
-        ret = blockValue * 0.8;
+        ret = blockValue * 0.9;
     } else if (nHeight <= 350000 && nHeight > 310000) {
-        ret = blockValue * 0.85;
+        ret = blockValue * 0.9;
     } else if (nHeight <= 500000 && nHeight > 350000) {
         ret = blockValue * 0.85;
-    } else if (nHeight <= 1000000 && nHeight > 500000) {
-        ret = blockValue * 0.9;
     } else if (nHeight <= 1500000 && nHeight > 1000000) {
-        ret = blockValue * 0.9;
+        ret = blockValue * 0.85;
     } else {
-        ret = blockValue * 0.9;
+        ret = blockValue * 0.85;
     }
 
     return ret;
@@ -2577,6 +2575,10 @@ bool DisconnectBlock(CBlock& block, CValidationState& state, CBlockIndex* pindex
                 if (coins->vout.size() < out.n + 1)
                     coins->vout.resize(out.n + 1);
                 coins->vout[out.n] = undo.txout;
+
+                // erase the spent input
+                if(IsSporkActive(SPORK_17_FAKE_STAKE_FIX) && block.GetBlockTime() >= GetSporkValue(SPORK_17_FAKE_STAKE_FIX))
+                    mapStakeSpent.erase(out);
             }
         }
     }
@@ -3050,6 +3052,29 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     if (fTxIndex)
         if (!pblocktree->WriteTxIndex(vPos))
             return state.Abort("Failed to write transaction index");
+
+    if(IsSporkActive(SPORK_17_FAKE_STAKE_FIX) && block.GetBlockTime() >= GetSporkValue(SPORK_17_FAKE_STAKE_FIX)){
+		// add new entries
+		for (const CTransaction tx : block.vtx) {
+			if (tx.IsCoinBase())
+				continue;
+			for (const CTxIn in : tx.vin) {
+				LogPrint("map", "mapStakeSpent: Insert %s | %u\n", in.prevout.ToString(), pindex->nHeight);
+				mapStakeSpent.insert(std::make_pair(in.prevout, pindex->nHeight));
+			}
+		}
+
+		// delete old entries
+		for (auto it = mapStakeSpent.begin(); it != mapStakeSpent.end();) {
+			if (it->second < pindex->nHeight - Params().MaxReorganizationDepth()) {
+				LogPrint("map", "mapStakeSpent: Erase %s | %u\n", it->first.ToString(), it->second);
+				it = mapStakeSpent.erase(it);
+			}
+			else {
+				it++;
+			}
+		}
+    }
 
     // add this block to the view's block chain
     view.SetBestBlock(pindex->GetBlockHash());
@@ -4216,6 +4241,59 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
     }
 
     int nHeight = pindex->nHeight;
+
+    if(IsSporkActive(SPORK_17_FAKE_STAKE_FIX) && block.GetBlockTime() >= GetSporkValue(SPORK_17_FAKE_STAKE_FIX)) {
+
+		if (block.IsProofOfStake()) {
+			LOCK(cs_main);
+
+			CCoinsViewCache coins(pcoinsTip);
+
+			if (!coins.HaveInputs(block.vtx[1])) {
+				LOCK(cs_mapstake);
+				// the inputs are spent at the chain tip so we should look at the recently spent outputs
+
+				for (CTxIn in : block.vtx[1].vin) {
+					auto it = mapStakeSpent.find(in.prevout);
+					if (it == mapStakeSpent.end()) {
+						return false;
+					}
+					if (it->second < pindexPrev->nHeight) {
+						return false;
+					}
+				}
+			}
+
+			// if this is on a fork
+			if (!chainActive.Contains(pindexPrev) && pindexPrev != NULL) {
+				// start at the block we're adding on to
+				CBlockIndex *last = pindexPrev;
+
+				//while that block is not on the main chain
+				while (!chainActive.Contains(last) && last != NULL) {
+					CBlock bl;
+					ReadBlockFromDisk(bl, last);
+					// loop through every spent input from said block
+					for (CTransaction t : bl.vtx) {
+						for (CTxIn in : t.vin) {
+							// loop through every spent input in the staking transaction of the new block
+							for (CTxIn stakeIn : block.vtx[1].vin) {
+								// if they spend the same input
+								if (stakeIn.prevout == in.prevout) {
+									//reject the block
+									return false;
+								}
+							}
+						}
+					}
+
+					// go to the parent block
+					last = last->pprev;
+				}
+			}
+		}
+
+    }
 
     // Write block to history file
     try {
