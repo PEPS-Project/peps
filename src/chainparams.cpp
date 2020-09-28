@@ -63,6 +63,8 @@ static Checkpoints::MapCheckpoints mapCheckpoints =
     ( 600000, uint256("0xb2a8811c88c32804dbf791e5401c25c4a041ecf938f53ef5251875af80439945"))
     ( 700000, uint256("0xc4177e5ae9d501da53c064733e821a3978c3c63ab3b931684ab35865c1519f55"))
     ( 738381, uint256("0x3600c8cf4a13507ac2ddbfd273036ef7a97696c4c3b924c2a5689aa083ff99ad"))
+    ( 900000, uint256("0x3600c8cf4a13507ac2ddbfd273036ef7a97696c4c3b924c2a5689aa083ff99ad"))
+    ( 1000000, uint256("0x002a4acb9d2cef6e6eb61829c4a8621ffa5c7e5f697b0f974554a9670e0d33bc"))
     ;
 
 static const Checkpoints::CCheckpointData data = {
@@ -155,11 +157,9 @@ public:
         assert(hashGenesisBlock == uint256("0x000002be4a05e7ce86e568cd6d106daca9d80bdeaa6564701efc2cd25a5bd86e"));
         assert(genesis.hashMerkleRoot == uint256("0xa59340af760f1a7b4f816476bfff59dc858588c4cfd1557bb9f3debe718cf378"));
 
-        vSeeds.push_back(CDNSSeedData("108.160.138.130", "108.160.138.130"));
-        vSeeds.push_back(CDNSSeedData("45.76.124.236", "45.76.124.236"));
-        vSeeds.push_back(CDNSSeedData("72.19.15.93", "72.19.15.93"));
-        vSeeds.push_back(CDNSSeedData("149.28.158.213", "149.28.158.213"));
-        vSeeds.push_back(CDNSSeedData("149.28.158.224", "149.28.158.224"));
+	vSeeds.push_back(CDNSSeedData("seed1.peps.today", "seed1.peps.today"));
+	vSeeds.push_back(CDNSSeedData("seed2.peps.today", "seed2.peps.today"));
+	vSeeds.push_back(CDNSSeedData("seed3.peps.today", "seed3.peps.today"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 55); // P
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 92); // e
@@ -251,8 +251,9 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("test-seeds1.peps.net", "test-seeds1.peps.net"));
-        vSeeds.push_back(CDNSSeedData("test-seeds2.peps.net", "test-seeds2.peps.net"));
+		vSeeds.push_back(CDNSSeedData("seed1.peps.today", "seed1.peps.today"));
+		vSeeds.push_back(CDNSSeedData("seed2.peps.today", "seed2.peps.today"));
+		vSeeds.push_back(CDNSSeedData("seed3.peps.today", "seed3.peps.today"));
 
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 139); // Testnet peps addresses start with 'x' or 'y'
