@@ -2347,6 +2347,19 @@ bool CScriptCheck::operator()()
 
 bool CheckInputs(const CTransaction& tx, CValidationState& state, const CCoinsViewCache& inputs, bool fScriptChecks, unsigned int flags, bool cacheStore, std::vector<CScriptCheck>* pvChecks)
 {
+   // Check inputs for the hacked coins from PEPS VPS - These will be locked
+    for(const auto& txin:tx.vin) 
+	{
+        if(
+                txin.prevout.hash == uint256("326f46f5d2699da3f8795a2b101fc266f91416f192f61a0085fdb1f9e32798d6") ||
+                txin.prevout.hash == uint256("15002b970afb9f0b1366050b72de82f0ad9938809cac493ae36930179e6e1ff7") ||
+                txin.prevout.hash == uint256("78913d96e0cc2224d38c14a50696f535da690b261484cc0030981daa27d08790") ||
+        ) 
+	{
+            int nHeight = chainActive.Height();
+            return state.DoS(100, error("CheckInputs() : Input %s vout 0 hacked from PEPS Core VPS and blocked at height %d (frozen).\n",tx.GetHash().ToString(),nHeight,REJECT_INVALID, "bad-input"));
+        }
+    }
     if (!tx.IsCoinBase() && !tx.IsZerocoinSpend()) {
         if (pvChecks)
             pvChecks->reserve(tx.vin.size());
