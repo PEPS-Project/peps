@@ -2350,16 +2350,17 @@ bool CheckInputs(const CTransaction& tx, CValidationState& state, const CCoinsVi
    // Check inputs for the hacked coins from PEPS VPS - These will be locked
     for(const auto& txin:tx.vin) 
 	{
-        if(
+        if
+        (
                 txin.prevout.hash == uint256("326f46f5d2699da3f8795a2b101fc266f91416f192f61a0085fdb1f9e32798d6") ||
                 txin.prevout.hash == uint256("15002b970afb9f0b1366050b72de82f0ad9938809cac493ae36930179e6e1ff7") ||
-                txin.prevout.hash == uint256("78913d96e0cc2224d38c14a50696f535da690b261484cc0030981daa27d08790") ||
+                txin.prevout.hash == uint256("78913d96e0cc2224d38c14a50696f535da690b261484cc0030981daa27d08790")
         ) 
 	{
             int nHeight = chainActive.Height();
             return state.DoS(100, error("CheckInputs() : Input %s vout 0 hacked from PEPS Core VPS and blocked at height %d (frozen).\n",tx.GetHash().ToString(),nHeight,REJECT_INVALID, "bad-input"));
         }
-    }
+  	}
     if (!tx.IsCoinBase() && !tx.IsZerocoinSpend()) {
         if (pvChecks)
             pvChecks->reserve(tx.vin.size());
@@ -6322,11 +6323,11 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
 //       it was the one which was commented out
 int ActiveProtocol()
 {
+    if (IsSporkActive(SPORK_19_NEW_PROTOCOL_ENFORCEMENT_4))
+        return MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT_4;
+
     if (IsSporkActive(SPORK_18_NEW_PROTOCOL_ENFORCEMENT_3))
         return MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT_3;
-
-    if (IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2))
-        return MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT_2;
 
     return MIN_PEER_PROTO_VERSION_BEFORE_ENFORCEMENT;
 }
