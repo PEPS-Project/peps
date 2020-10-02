@@ -16,7 +16,7 @@
 
 **Yes, PEPS gives you the power of Real Money with Privacy. No one control your Transactions, No Government, No Tax, No Banks and No middleman! PEPS is borderless, you can take it Anywhere in the world and Spend it! No Forex or Currency converters needed! Soon to be launched, PEPS ATM will give you Cash Banknotes in major countries, or Just use PEPS with PEPS Prepaid Card.**
 
-### *PEPShip.com - Store*
+### *[PEPShip.com](https://pepship.com/) - Store*
 
 **Behold the World's Largest Crypto Shopping Store. Wondering How is it Largest in the world? Because it is simply the biggest store on the Internet which accepts only Cryptocurrencies. Along With huge collection of products and services for many countries, PEPShip offers FREE Shipping worldwide! Can't believe right? Free shipping even for a product worth $2!**
 
