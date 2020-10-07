@@ -1,12 +1,12 @@
 ![PEPS Logo](https://cdn.discordapp.com/attachments/506552178190581780/506552696447434783/peps_twitter1.png "PEPS Logo")
 
-***| License*** ![GitHub](https://img.shields.io/github/license/PEPS-Project/peps) 
+***| License*** [![GitHub](https://img.shields.io/github/license/PEPS-Project/peps)](https://opensource.org/licenses/MIT)
 ***| Social Media*** [![twitter](https://img.shields.io/twitter/follow/projectpeps.svg?logo=twitter&label=Twitter&color=1da1f2&style=square)](http://twitter.peps.today/) • [![discord](https://img.shields.io/discord/418843447949262848.svg?&label=Discord&logo=Discord&color=7289da)](http://discord.peps.today/ ) • [![telegram](https://img.shields.io/badge/Telegram-follow-0088cc.svg?logo=telegram&color=0088cc)](https://t.me/ProjectPEPS) • [![telegram](https://img.shields.io/badge/Telegram-chat-0088cc.svg?logo=telegram&color=0088cc)](http://telegram.peps.today)
 
 ***Project PEPS<br>***
 =====================================
 
-### *Latest Wallet releases : https://github.com/PEPS-Project/peps/releases*
+***PEPS Wallet - [Latest releases](https://github.com/PEPS-Project/peps/releases)***
 
 ---
 
@@ -34,6 +34,10 @@
 > 
 > **[Bitcointalk](https://bitcointalk.org/index.php?topic=5052347)**<br>
 > **[Github](https://github.com/PEPS-Project)**<br>
+> 
+> **[PEPSX - TronLink](https://www.tronlink.org/)**<br>
+> **PEPSX - TronLink Contract address**<br>
+> `TCmaZvH3ZdX1TLHuTrftf4hKzSXHiVMRnQ`
 
 <br>
 
@@ -75,7 +79,7 @@
 > **[Masternode Setup - Automatic-Setup-Script](https://github.com/PEPS-Project/peps/releases/download/v2.3.2/peps-mn.sh)**<br>
 > **[Masternode Update - Automatic-Update-Script](https://github.com/PEPS-Project/peps/releases/download/v2.3.2/update-mn.sh)**<br>
 > 
-> ***This command can install multiple masternodes on a single vps running Ubuntu 16.04***
+> **This command can install multiple masternodes on a single vps running Ubuntu 16.04**
 > ```
 > wget https://github.com/PEPS-Project/peps/releases/download/v2.3.2/multipeps.sh &&  chmod +x multipeps.sh && ./multipeps.sh
 
@@ -121,21 +125,34 @@
 > **[Facebook](https://www.facebook.com/Pepscommunity)**<br>
 > **[Medium](https://medium.com/@peps.it.today)**<br>
 > **[Discord](http://discord.peps.today)**<br>
+
+<br>
+
+> ***Twitter official***<br>
+> **[Announcements](http://twitter.peps.today)**<br>
 > 
-> **[Twitter](http://twitter.peps.today)**<br>
-> **[Twitter | Brasil](https://twitter.com/PEPS_Brasil)**<br>
-> 
-> ***Telegram -official-***<br>
+> ***-select-your-twitter-group-***<br>
+> **[Arabic](https://twitter.com/ArabicPeps?s=09)**<br>
+> **[Brasil](https://twitter.com/PEPS_Brasil)**<br>
+> **[Italy](https://twitter.com/ItaliaPeps?s=09)**<br>
+
+<br>
+
+> ***Telegram official***<br>
 > **[Announcements](https://t.me/ProjectPEPS)**<br>
 > **[International-Community](http://telegram.peps.today)**<br>
 > 
-> ***Telegram -select-your-group-***<br>
+> ***-select-your-telegram-group-***<br>
 > **[Arabic](https://t.me/Peps_Ar)**<br>
 > **[Brasil](https://t.me/Peps_BR)**<br>
 > **[Germany](https://t.me/peps_de)**<br>
+> **[India](https://t.me/peps_IN)**<br>
+> **[Israel](https://t.me/PepsCoin_Israel)**<br>
 > **[Italy](https://t.me/peps_it)**<br>
-> **[Japanese](https://t.me/peps_japan)**<br>
+> **[Japan](https://t.me/peps_JP)**<br>
 > **[Latinoamérica](https://t.me/PepsLatm)**<br>
+> **[Philippines](https://t.me/Peps_Ph)**<br>
+> **[Turkish](https://t.me/Peps_TR)**<br>
 > **[United Kingdom](https://t.me/Peps_UK)**<br>
 
 
